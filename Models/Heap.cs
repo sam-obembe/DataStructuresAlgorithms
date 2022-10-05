@@ -52,12 +52,13 @@ namespace DataStructuresAlgorithms.Models
 
             while (insertedPosition > 0 && Data[insertedPosition].Data > Data[ParentIndex(insertedPosition)].Data)
             {
-                var parentData = Data[ParentIndex(insertedPosition)].Data;
+                var parentIndex = ParentIndex(insertedPosition);
+                var parentData = Data[parentIndex].Data;
 
-                Data[ParentIndex(insertedPosition)].Data = Data[insertedPosition].Data;
+                Data[parentIndex].Data = Data[insertedPosition].Data;
                 Data[insertedPosition].Data = parentData;
 
-                insertedPosition = ParentIndex(insertedPosition);
+                insertedPosition = parentIndex;
             }
         }
         public void Display()
