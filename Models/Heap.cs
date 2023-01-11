@@ -63,30 +63,47 @@ namespace DataStructuresAlgorithms.Models
         public void Display()
         {
 
-            //var dataArray = Data.ToArray();
-
+            //number of levels in heap is equal to Log2N
             var levels = (int)Math.Ceiling(Math.Log2(Data.Count));
-            var splitIntoLevels = new List<HeapNode<int>>[levels];
+
+            //each level is a List of ints
+            var splitIntoLevels = new List<int>[levels];
             var arrPosition = 0;
+            var levelPosition = 0;
 
-            while (arrPosition < Data.Count)
+            while (levelPosition < levels)
             {
-                var entries = new List<HeapNode<int>>();
-                for (int i = 0; i < levels; i++)
-                {
+                var entries = new List<int>();
+                var maxCount = ((int)Math.Pow(2,levelPosition)); //the maximum number of elements for that level
+                var takenData = Data.Take(new Range(arrPosition, arrPosition + maxCount)).ToList().Select(x => x.Data);
+                entries.AddRange(takenData);
+                
 
-                    var maxCount = i;
-                    var takenData = Data.Take(new Range(arrPosition, arrPosition + maxCount)).ToList();
-                    entries.AddRange(takenData);
-                    splitIntoLevels[i] = entries;
-                    //entries.Clear();
-                    arrPosition++;
-                }
-                entries.Clear();
+                splitIntoLevels[levelPosition] = new List<int>(entries);
+                arrPosition += maxCount;
+                levelPosition++;
+                
             }
 
+            for(int i = 0 ; i < splitIntoLevels.Count(); i++){
+                //var 
+                var numOfTabs = (int)Math.Ceiling((splitIntoLevels.Count() - i)/2m);
+                var tabs = new char[numOfTabs];
+                for(int j = 0 ; j < numOfTabs; j++){
+                    tabs[j] = '\t';
+                }
+                var tabString = new string(tabs);
+                var output = tabString + string.Join('\t',splitIntoLevels[i]);
+                Console.WriteLine(output);
+            }
+        }
 
-            Console.WriteLine(string.Join(',', Data.Select(x => x.Data)));
+        private int NumberOfTabs(List<int>[] heap, int level){
+            var numOfElementsAtLevel = (int)Math.Pow(2,level);
+            var numOfParents = (int)Math.Pow(2,level-1);
+            var parentLevel = level - 1;
+
+            return numOfElementsAtLevel + numOfParents + parentLevel;
         }
 
     }
